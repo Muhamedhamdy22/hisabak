@@ -19,6 +19,7 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   loader_overlay: ^5.0.0
   shared_preferences: ^2.5.4
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:

@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hisabak/core/constants/app_theme.dart';
+import 'package:hisabak/core/routes_manager/route.dart';
+import 'package:hisabak/core/routes_manager/route_generator.dart';
 import 'package:hisabak/di.dart';
 
-void main() {
+void main()  {
   WidgetsFlutterBinding.ensureInitialized();
-  configureDependencies();
-  runApp(const MyApp());
+   configureDependencies();
+  runApp(const HisabakApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class HisabakApp extends StatelessWidget {
+  const HisabakApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(360, 800),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: child,
-        ),
+    return MaterialApp(
+      title: 'Hisabak',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      initialRoute: Routes.homeRoute,
+      onGenerateRoute: RouteGenerator.getRoute,
     );
   }
 }
