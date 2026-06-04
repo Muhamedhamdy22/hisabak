@@ -19,7 +19,7 @@ class HisabakApp extends StatelessWidget {
       title: 'Hisabak',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      initialRoute: Routes.homeRoute,
+      initialRoute: Routes.loginRoute,
       onGenerateRoute: RouteGenerator.getRoute,
     );
   }

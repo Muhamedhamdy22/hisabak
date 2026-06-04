@@ -30,8 +30,8 @@ class SignUpScreen extends StatelessWidget {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(top: 64, bottom: 32, left: 24, right: 24),
-      decoration: const BoxDecoration(
+      padding:  EdgeInsets.only(top: 64, bottom: 32, left: 24, right: 24),
+      decoration:  BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(AppConstants.radiusXl),
@@ -43,11 +43,11 @@ class SignUpScreen extends StatelessWidget {
           Container(
             width: 72,
             height: 72,
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
               color: AppColors.gold,
               shape: BoxShape.circle,
             ),
-            child: const Center(
+            child:  Center(
               child: Text(
                 'H',
                 style: TextStyle(
@@ -58,8 +58,8 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 12),
-          const Text(
+           SizedBox(height: 12),
+           Text(
             AppConstants.appName,
             style: TextStyle(
               fontSize: 26,
@@ -68,11 +68,11 @@ class SignUpScreen extends StatelessWidget {
               letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 2),
-          const Text(
-            AppConstants.appNameAr,
-            style: TextStyle(fontSize: 13, color: AppColors.surface),
-          ),
+           SizedBox(height: 2),
+          //  Text(
+          //   AppConstants.appNameAr,
+          //   style: TextStyle(fontSize: 13, color: AppColors.surface),
+          // ),
         ],
       ),
     );
@@ -80,15 +80,15 @@ class SignUpScreen extends StatelessWidget {
 
   Widget _buildForm(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(AppConstants.spaceMd),
+      padding:  EdgeInsets.all(AppConstants.spaceMd),
       child: Form(
         key: formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 16),
-            const Text('Create Account', style: AppTextStyles.headlineMedium),
-            const SizedBox(height: 24),
+             SizedBox(height: 16),
+             Text('Create Account', style: AppTextStyles.headlineMedium),
+             SizedBox(height: 24),
             _buildTextField(
               controller: nameController,
               label: 'Full Name',
@@ -97,7 +97,7 @@ class SignUpScreen extends StatelessWidget {
               validator: (v) =>
               v == null || v.isEmpty ? 'Enter your name' : null,
             ),
-            const SizedBox(height: 16),
+             SizedBox(height: 16),
             _buildTextField(
               controller: phoneController,
               label: 'Phone Number',
@@ -111,7 +111,7 @@ class SignUpScreen extends StatelessWidget {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+             SizedBox(height: 16),
             _buildTextField(
               controller: passwordController,
               label: 'Password',
@@ -121,7 +121,7 @@ class SignUpScreen extends StatelessWidget {
               validator: (v) =>
               v == null || v.length < 6 ? 'Password too short' : null,
             ),
-            const SizedBox(height: 16),
+             SizedBox(height: 16),
             _buildTextField(
               controller: confirmController,
               label: 'Confirm Password',
@@ -132,7 +132,7 @@ class SignUpScreen extends StatelessWidget {
                   ? 'Passwords do not match'
                   : null,
             ),
-            const SizedBox(height: 28),
+             SizedBox(height: 28),
             _buildPrimaryButton(
               label: 'Create Account',
               color: AppColors.gold,
@@ -142,15 +142,15 @@ class SignUpScreen extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 20),
+             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Already have account?',
+                 Text('Already have account?',
                     style: AppTextStyles.bodyMedium),
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text(
+                  child:  Text(
                     'Login',
                     style: TextStyle(
                       color: AppColors.primary,
@@ -160,7 +160,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+             SizedBox(height: 16),
           ],
         ),
       ),
