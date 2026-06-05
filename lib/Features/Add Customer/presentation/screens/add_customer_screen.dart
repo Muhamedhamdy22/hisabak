@@ -16,30 +16,30 @@ class AddCustomerScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: const Text('Add Customer',
+        title:  Text('Add Customer',
             style: TextStyle(color: AppColors.surface, fontWeight: FontWeight.w600)),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.surface),
+          icon:  Icon(Icons.arrow_back_ios, color: AppColors.surface),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppConstants.spaceMd),
+        padding:  EdgeInsets.all(AppConstants.spaceMd),
         child: Form(
           key: formKey,
           child: Column(
             children: [
-              const SizedBox(height: 16),
+               SizedBox(height: 16),
               CircleAvatar(
                 radius: 48,
                 backgroundColor: AppColors.primary.withOpacity(0.1),
-                child: const Icon(Icons.person_add_outlined,
+                child:  Icon(Icons.person_add_outlined,
                     size: 48, color: AppColors.primary),
               ),
-              const SizedBox(height: 32),
+               SizedBox(height: 32),
               Container(
-                padding: const EdgeInsets.all(AppConstants.spaceMd),
+                padding:  EdgeInsets.all(AppConstants.spaceMd),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(AppConstants.radiusLg),
@@ -52,7 +52,7 @@ class AddCustomerScreen extends StatelessWidget {
                       style: AppTextStyles.bodyLarge,
                       validator: (v) =>
                       v == null || v.isEmpty ? 'Enter customer name' : null,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         labelText: 'Customer Name',
                         hintText: 'Enter full name',
                         prefixIcon: Icon(Icons.person_outline,
@@ -60,7 +60,7 @@ class AddCustomerScreen extends StatelessWidget {
                         labelStyle: AppTextStyles.bodyMedium,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                     SizedBox(height: 16),
                     TextFormField(
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
@@ -82,7 +82,7 @@ class AddCustomerScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 32),
+               SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -95,12 +95,12 @@ class AddCustomerScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: AppColors.surface,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding:  EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                     ),
                   ),
-                  child: const Text('Save Customer',
+                  child:  Text('Save Customer',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
