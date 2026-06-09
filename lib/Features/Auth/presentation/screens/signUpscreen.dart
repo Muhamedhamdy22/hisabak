@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisabak/Features/Auth/presentation/bloc/auth_bloc.dart';
+import 'package:hisabak/Features/Auth/presentation/bloc/auth_event.dart';
+import 'package:hisabak/Features/Auth/presentation/bloc/auth_state.dart';
 import 'package:hisabak/core/constants/app_colors.dart';
 import 'package:hisabak/core/constants/app_text_styles.dart';
 import 'package:hisabak/core/constants/app_constants.dart';
+import 'package:hisabak/core/routes_manager/route.dart';
+import 'package:hisabak/di.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -14,15 +20,35 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildForm(context),
-          ],
-        ),
+    return BlocProvider(
+      create: (context) => getIt<AuthBloc>(),
+      child: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state.registerRequestStatus == RequestStatus.success) {
+            Navigator.pushReplacementNamed(context, Routes.homeRoute);
+          }
+          if (state.registerRequestStatus == RequestStatus.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.registerRequestMessage ?? 'Something went wrong'),
+                backgroundColor: AppColors.danger,
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: AppColors.background,
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  _buildForm(context, state),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -30,8 +56,8 @@ class SignUpScreen extends StatelessWidget {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding:  EdgeInsets.only(top: 64, bottom: 32, left: 24, right: 24),
-      decoration:  BoxDecoration(
+      padding: const EdgeInsets.only(top: 64, bottom: 32, left: 24, right: 24),
+      decoration: const BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(AppConstants.radiusXl),
@@ -43,11 +69,11 @@ class SignUpScreen extends StatelessWidget {
           Container(
             width: 72,
             height: 72,
-            decoration:  BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.gold,
               shape: BoxShape.circle,
             ),
-            child:  Center(
+            child: const Center(
               child: Text(
                 'H',
                 style: TextStyle(
@@ -58,8 +84,8 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
           ),
-           SizedBox(height: 12),
-           Text(
+          const SizedBox(height: 12),
+          const Text(
             AppConstants.appName,
             style: TextStyle(
               fontSize: 26,
@@ -68,27 +94,30 @@ class SignUpScreen extends StatelessWidget {
               letterSpacing: 0.5,
             ),
           ),
-           SizedBox(height: 2),
-          //  Text(
-          //   AppConstants.appNameAr,
-          //   style: TextStyle(fontSize: 13, color: AppColors.surface),
-          // ),
+          const SizedBox(height: 6),
+          Text(
+            AppConstants.appSlogan,
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.surface.withOpacity(0.7),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildForm(BuildContext context) {
+  Widget _buildForm(BuildContext context, AuthState state) {
     return Padding(
-      padding:  EdgeInsets.all(AppConstants.spaceMd),
+      padding: const EdgeInsets.all(AppConstants.spaceMd),
       child: Form(
         key: formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             SizedBox(height: 16),
-             Text('Create Account', style: AppTextStyles.headlineMedium),
-             SizedBox(height: 24),
+            const SizedBox(height: 16),
+            const Text('Create Account', style: AppTextStyles.headlineMedium),
+            const SizedBox(height: 24),
             _buildTextField(
               controller: nameController,
               label: 'Full Name',
@@ -97,7 +126,7 @@ class SignUpScreen extends StatelessWidget {
               validator: (v) =>
               v == null || v.isEmpty ? 'Enter your name' : null,
             ),
-             SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildTextField(
               controller: phoneController,
               label: 'Phone Number',
@@ -111,7 +140,7 @@ class SignUpScreen extends StatelessWidget {
                 return null;
               },
             ),
-             SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildTextField(
               controller: passwordController,
               label: 'Password',
@@ -121,7 +150,7 @@ class SignUpScreen extends StatelessWidget {
               validator: (v) =>
               v == null || v.length < 6 ? 'Password too short' : null,
             ),
-             SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildTextField(
               controller: confirmController,
               label: 'Confirm Password',
@@ -132,25 +161,32 @@ class SignUpScreen extends StatelessWidget {
                   ? 'Passwords do not match'
                   : null,
             ),
-             SizedBox(height: 28),
+            const SizedBox(height: 28),
             _buildPrimaryButton(
               label: 'Create Account',
               color: AppColors.gold,
+              isLoading: state.registerRequestStatus == RequestStatus.loading,
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  // TODO: add register event
+                  context.read<AuthBloc>().add(
+                    RegisterEvent(
+                      name: nameController.text,
+                      phone: phoneController.text,
+                      password: passwordController.text,
+                    ),
+                  );
                 }
               },
             ),
-             SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 Text('Already have account?',
+                const Text('Already have account?',
                     style: AppTextStyles.bodyMedium),
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child:  Text(
+                  child: const Text(
                     'Login',
                     style: TextStyle(
                       color: AppColors.primary,
@@ -160,7 +196,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ],
             ),
-             SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -197,12 +233,13 @@ class SignUpScreen extends StatelessWidget {
   Widget _buildPrimaryButton({
     required String label,
     required VoidCallback onPressed,
+    bool isLoading = false,
     Color color = AppColors.primary,
   }) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
           foregroundColor: AppColors.surface,
@@ -211,7 +248,16 @@ class SignUpScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           ),
         ),
-        child: Text(
+        child: isLoading
+            ? const SizedBox(
+          height: 20,
+          width: 20,
+          child: CircularProgressIndicator(
+            color: AppColors.surface,
+            strokeWidth: 2,
+          ),
+        )
+            : Text(
           label,
           style: AppTextStyles.bodyLarge.copyWith(
             color: AppColors.surface,
