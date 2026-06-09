@@ -7,7 +7,7 @@ class AppConstants {
   static const String appVersion  = '1.0.0';
 
   // API
-  static const String baseUrl     = 'http://127.0.0.1:8000/api';
+  static const String baseUrl = 'http://192.168.1.3:8000/api';
 
   // Border Radius
   static const double radiusSm    = 8;

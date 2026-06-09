@@ -12,21 +12,38 @@ import 'package:hisabak/di.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<AuthBloc>(),
       child: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.loginRequestStatus == RequestStatus.success) {
+            Navigator.pushReplacementNamed(context, Routes.homeRoute);
+          }
+          if (state.loginRequestStatus == RequestStatus.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.loginRequestMessage ?? 'Something went wrong'),
+                backgroundColor: AppColors.danger,
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.background,
             body: SingleChildScrollView(
-              child: Column(children: [_buildHeader(), _buildForm(context)]),
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  _buildForm(context, state),
+                ],
+              ),
             ),
           );
         },
@@ -37,8 +54,8 @@ class LoginScreen extends StatelessWidget {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(top: 80, bottom: 40, left: 24, right: 24),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.only(top: 80, bottom: 40, left: 24, right: 24),
+      decoration: const BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(AppConstants.radiusXl),
@@ -50,11 +67,11 @@ class LoginScreen extends StatelessWidget {
           Container(
             width: 80,
             height: 80,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.gold,
               shape: BoxShape.circle,
             ),
-            child: Center(
+            child: const Center(
               child: Text(
                 'H',
                 style: TextStyle(
@@ -65,8 +82,8 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 14),
-          Text(
+          const SizedBox(height: 14),
+          const Text(
             AppConstants.appName,
             style: TextStyle(
               fontSize: 28,
@@ -75,16 +92,7 @@ class LoginScreen extends StatelessWidget {
               letterSpacing: 0.5,
             ),
           ),
-          SizedBox(height: 2),
-          // const Text(
-          //   AppConstants.appNameAr,
-          //   style: TextStyle(
-          //     fontSize: 14,
-          //     fontWeight: FontWeight.w500,
-          //     color: AppColors.surface,
-          //   ),
-          // ),
-          SizedBox(height: 3),
+          const SizedBox(height: 6),
           Text(
             AppConstants.appSlogan,
             style: TextStyle(
@@ -97,7 +105,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildForm(BuildContext context) {
+  Widget _buildForm(BuildContext context, AuthState state) {
     return Padding(
       padding: const EdgeInsets.all(AppConstants.spaceMd),
       child: Form(
@@ -105,9 +113,9 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 16),
-            Text('Welcome To Hisabak', style: AppTextStyles.titleLarge),
-            SizedBox(height: 24),
+            const SizedBox(height: 16),
+            const Text('Welcome To Hisabak', style: AppTextStyles.titleLarge),
+            const SizedBox(height: 24),
             _buildTextField(
               controller: phoneController,
               label: 'Phone Number',
@@ -116,17 +124,17 @@ class LoginScreen extends StatelessWidget {
               keyboardType: TextInputType.phone,
               textDirection: TextDirection.ltr,
               validator: (v) =>
-                  v == null || v.isEmpty ? 'Enter phone number' : null,
+              v == null || v.isEmpty ? 'Enter phone number' : null,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildTextField(
               controller: passwordController,
-              label: 'Create Password',
+              label: 'Password',
               hint: '••••••••',
               icon: Icons.lock_outline,
               obscureText: true,
               validator: (v) =>
-                  v == null || v.length < 6 ? 'Password too short' : null,
+              v == null || v.length < 6 ? 'Password too short' : null,
             ),
             const SizedBox(height: 8),
             Align(
@@ -142,24 +150,28 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 8),
             _buildPrimaryButton(
               label: 'Login',
+              isLoading: state.loginRequestStatus == RequestStatus.loading,
               onPressed: () {
-                context.read<AuthBloc>().add(
-                  LoginEvent(
-                    email: phoneController.text,
-                    password: passwordController.text,
-                  ),
-                );
+                if (formKey.currentState!.validate()) {
+                  context.read<AuthBloc>().add(
+                    LoginEvent(
+                      phone: phoneController.text,
+                      password: passwordController.text,
+                    ),
+                  );
+                }
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Don't have an account?", style: AppTextStyles.bodyMedium),
+                const Text("Don't have an account?",
+                    style: AppTextStyles.bodyMedium),
                 TextButton(
                   onPressed: () =>
                       Navigator.pushNamed(context, Routes.signUpRoute),
-                  child: Text(
+                  child: const Text(
                     'Sign up',
                     style: TextStyle(
                       color: AppColors.primary,
@@ -205,21 +217,31 @@ class LoginScreen extends StatelessWidget {
   Widget _buildPrimaryButton({
     required String label,
     required VoidCallback onPressed,
+    bool isLoading = false,
     Color color = AppColors.primary,
   }) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
           foregroundColor: AppColors.surface,
-          padding: EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppConstants.radiusMd),
           ),
         ),
-        child: Text(
+        child: isLoading
+            ? const SizedBox(
+          height: 20,
+          width: 20,
+          child: CircularProgressIndicator(
+            color: AppColors.surface,
+            strokeWidth: 2,
+          ),
+        )
+            : Text(
           label,
           style: AppTextStyles.bodyLarge.copyWith(
             color: AppColors.surface,
