@@ -1,9 +1,7 @@
 import 'package:hisabak/Features/Auth/data/models/LoginResponse.dart';
-
-enum RequestStatus { init, loading, success, error }
+import 'package:hisabak/core/enums/request_status.dart';
 
 class AuthState {
-
   final RequestStatus? loginRequestStatus;
   final String? loginRequestMessage;
   final LoginResponse? loginResponse;

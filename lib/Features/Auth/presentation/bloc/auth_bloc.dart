@@ -5,6 +5,7 @@ import 'package:hisabak/Features/Auth/domin/usecase/register_use_case.dart';
 import 'package:hisabak/Features/Auth/presentation/bloc/auth_event.dart';
 import 'package:hisabak/Features/Auth/presentation/bloc/auth_state.dart';
 import 'package:hisabak/core/Api/error_handling.dart';
+import 'package:hisabak/core/enums/request_status.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
