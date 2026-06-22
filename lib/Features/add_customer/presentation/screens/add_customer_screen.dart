@@ -16,7 +16,7 @@ class AddCustomerScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title:  Text('Add Customer',
+        title:  Text('add_customer',
             style: TextStyle(color: AppColors.surface, fontWeight: FontWeight.w600)),
         centerTitle: true,
         leading: IconButton(

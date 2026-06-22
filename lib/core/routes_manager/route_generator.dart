@@ -4,9 +4,8 @@ import 'package:hisabak/Features/Auth/presentation/screens/signUpscreen.dart';
 import 'package:hisabak/Features/CustomerDetails/presentation/screens/customer_details.dart';
 import 'package:hisabak/Features/Customers/presentation/screens/customers_screen.dart';
 import 'package:hisabak/Features/Home/presentation/screens/home_screen.dart';
+import 'package:hisabak/Features/add_customer/presentation/screens/add_customer_screen.dart';
 import 'package:hisabak/core/routes_manager/route.dart';
-
-import '../../Features/Add Customer/presentation/screens/add_customer_screen.dart' show AddCustomerScreen;
 import '../../Features/AddTransaction/presentation/screens/add_transaction_screen.dart' show AddTransactionScreen;
 import '../../Features/Settings/presentation/screens/setting_screen.dart' show SettingsScreen;
 
