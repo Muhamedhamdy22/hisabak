@@ -40,13 +40,12 @@ class AddCustomerScreen extends StatelessWidget {
         },
         builder: (context, state) {
           final isLoading = state.createCustomerStatus == RequestStatus.loading;
-
           return Scaffold(
             backgroundColor: AppColors.background,
             appBar: AppBar(
               backgroundColor: AppColors.primary,
               title: const Text(
-                'add_customer',
+                'Add Customer',
                 style: TextStyle(
                   color: AppColors.surface,
                   fontWeight: FontWeight.w600,
@@ -102,9 +101,7 @@ class AddCustomerScreen extends StatelessWidget {
                             textDirection: TextDirection.ltr,
                             style: AppTextStyles.bodyLarge,
                             validator: (v) {
-                              if (v == null || v.isEmpty) {
-                                return 'Enter phone number';
-                              }
+                              if (v == null || v.isEmpty) return 'Enter phone number';
                               if (v.length < 11) return 'Invalid phone number';
                               return null;
                             },
@@ -140,8 +137,7 @@ class AddCustomerScreen extends StatelessWidget {
                           foregroundColor: AppColors.surface,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.circular(AppConstants.radiusMd),
+                            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
                           ),
                         ),
                         child: isLoading
