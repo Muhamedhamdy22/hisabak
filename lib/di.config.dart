@@ -35,6 +35,12 @@ import 'Features/Auth/domin/repo/auth_repo.dart' as _i559;
 import 'Features/Auth/domin/usecase/login_use_case.dart' as _i48;
 import 'Features/Auth/domin/usecase/register_use_case.dart' as _i111;
 import 'Features/Auth/presentation/bloc/auth_bloc.dart' as _i11;
+import 'Features/Home/data/datasource/dashboard_ds.dart' as _i214;
+import 'Features/Home/data/datasource/dashboard_ds_impl.dart' as _i37;
+import 'Features/Home/data/repo/dashboard_repo_impl.dart' as _i1042;
+import 'Features/Home/domain/repo/dashboard_repo.dart' as _i643;
+import 'Features/Home/domain/usecase/dashboard_use_case.dart' as _i459;
+import 'Features/Home/presentation/bloc/dashboard_bloc.dart' as _i87;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -53,9 +59,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i13.TransactionRepo>(
       () => _i637.TransactionRepoImpl(gh<_i964.TransactionDs>()),
     );
+    gh.factory<_i214.DashboardDs>(
+      () => _i37.DashboardDsImpl(gh<_i795.ApiManager>()),
+    );
     gh.factory<_i998.AuthDs>(() => _i233.AuthDsImpl(gh<_i795.ApiManager>()));
     gh.factory<_i646.CustomerRepo>(
       () => _i72.CustomerRepoImpl(gh<_i1057.CustomerDs>()),
+    );
+    gh.factory<_i643.DashboardRepo>(
+      () => _i1042.DashboardRepoImpl(gh<_i214.DashboardDs>()),
     );
     gh.factory<_i559.AuthRepo>(() => _i883.AuthRepoImpl(gh<_i998.AuthDs>()));
     gh.factory<_i933.GetTransactionsUseCase>(
@@ -98,6 +110,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i638.CreateCustomerUseCase>(),
         gh<_i638.DeleteCustomerUseCase>(),
       ),
+    );
+    gh.factory<_i459.GetDashboardUseCase>(
+      () => _i459.GetDashboardUseCase(gh<_i643.DashboardRepo>()),
+    );
+    gh.factory<_i87.DashboardBloc>(
+      () => _i87.DashboardBloc(gh<_i459.GetDashboardUseCase>()),
     );
     return this;
   }
