@@ -13,8 +13,10 @@ class SettingsScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: const Text('Settings',
-            style: TextStyle(color: AppColors.surface, fontWeight: FontWeight.w600)),
+        title: const Text(
+          'Settings',
+          style: TextStyle(color: AppColors.surface, fontWeight: FontWeight.w600),
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -22,17 +24,20 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // TODO: ProfileCard هنا من الـ BLoC
-            const _SectionLabel(label: 'PREFERENCES'),
-            const SizedBox(height: 8),
-            _buildLanguageCard(),
-            const SizedBox(height: 20),
             const _SectionLabel(label: 'ACCOUNT'),
             const SizedBox(height: 8),
             _buildSettingsCard(
               children: [
-                _buildSettingsRow(icon: Icons.lock_outline, title: 'Change Password', onTap: () {}),
-                _buildSettingsRow(icon: Icons.phone_outlined, title: 'Change Phone Number', onTap: () {}),
+                _buildSettingsRow(
+                  icon: Icons.lock_outline,
+                  title: 'Change Password',
+                  onTap: () {},
+                ),
+                _buildSettingsRow(
+                  icon: Icons.phone_outlined,
+                  title: 'Change Phone Number',
+                  onTap: () {},
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -46,7 +51,11 @@ class SettingsScreen extends StatelessWidget {
                   trailing: const Text(AppConstants.appVersion, style: AppTextStyles.bodyMedium),
                   onTap: () {},
                 ),
-                _buildSettingsRow(icon: Icons.star_outline, title: 'Rate the App', onTap: () {}),
+                _buildSettingsRow(
+                  icon: Icons.star_outline,
+                  title: 'Rate the App',
+                  onTap: () {},
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -56,65 +65,6 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: _buildBottomNav(context, 2),
-    );
-  }
-
-  Widget _buildLanguageCard() {
-    // TODO: يتحكم فيها الـ BLoC
-    return Container(
-      padding: const EdgeInsets.all(AppConstants.spaceMd),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
-        border: Border.all(color: AppColors.border, width: 0.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-              Icon(Icons.language, color: AppColors.primary, size: 20),
-              SizedBox(width: 10),
-              Text('Language', style: AppTextStyles.bodyLarge),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(child: _buildLangButton('en', 'English', '🇬🇧', true)),
-              const SizedBox(width: 10),
-              Expanded(child: _buildLangButton('ar', 'العربية', '🇪🇬', false)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLangButton(String code, String label, String flag, bool selected) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.primary : AppColors.background,
-        borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-        border: Border.all(
-            color: selected ? AppColors.primary : AppColors.border,
-            width: selected ? 1.5 : 0.5),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(flag, style: const TextStyle(fontSize: 18)),
-          const SizedBox(width: 8),
-          Text(label,
-              style: TextStyle(
-                color: selected ? AppColors.surface : AppColors.textPrimary,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-                fontSize: 13,
-              )),
-        ],
-      ),
     );
   }
 
@@ -155,13 +105,16 @@ class SettingsScreen extends StatelessWidget {
       child: OutlinedButton.icon(
         onPressed: () => _confirmLogout(context),
         icon: const Icon(Icons.logout, color: AppColors.danger),
-        label: const Text('Logout',
-            style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w600)),
+        label: const Text(
+          'Logout',
+          style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w600),
+        ),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
           side: const BorderSide(color: AppColors.danger, width: 0.5),
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
+            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+          ),
         ),
       ),
     );
@@ -172,17 +125,19 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
+          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+        ),
         title: const Text('Logout'),
         content: const Text('Are you sure you want to logout?'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              // TODO: logout event
+              // TODO: clear token from SharedPreferences
               Navigator.pushReplacementNamed(context, Routes.loginRoute);
             },
             child: const Text('Logout', style: TextStyle(color: AppColors.danger)),
@@ -219,8 +174,12 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(label,
-        style: AppTextStyles.labelSmall
-            .copyWith(fontWeight: FontWeight.w600, letterSpacing: 0.5));
+    return Text(
+      label,
+      style: AppTextStyles.labelSmall.copyWith(
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.5,
+      ),
+    );
   }
 }
