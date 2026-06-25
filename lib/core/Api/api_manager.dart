@@ -1,116 +1,69 @@
 import 'package:dio/dio.dart';
 import 'package:hisabak/core/constants/app_constants.dart';
+import 'package:hisabak/core/helper/shared_pref_helper.dart';
 import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 @lazySingleton
 class ApiManager {
-  final Dio _dio = Dio();
+  late Dio _dio;
 
   ApiManager() {
-    _dio.options = BaseOptions(
-      baseUrl: AppConstants.baseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: AppConstants.baseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
     );
-    _dio.interceptors.add(PrettyDioLogger());
+
+    // Logger
+    _dio.interceptors.add(PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseBody: true,
+    ));
+
+    // Token Interceptor
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          final token = SharedPrefHelper.getToken();
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+          return handler.next(options);
+        },
+        onError: (error, handler) {
+          return handler.next(error);
+        },
+      ),
+    );
   }
 
-  Future<Response> get<T>({
+  Future<Response> get({required String endpoint}) async {
+    return await _dio.get(endpoint);
+  }
+
+  Future<Response> post({
     required String endpoint,
-    Map<String, dynamic>? queryParameters,
-    Map<String, dynamic>? headers,
-    Options? options,
+    required Map<String, dynamic> data,
   }) async {
-    try {
-      final response = await _dio.get(
-        endpoint,
-        queryParameters: queryParameters,
-        options: options ?? (headers != null ? Options(headers: headers) : null),
-      );
-      return response;
-    } on DioException catch (e) {
-      throw _handleDioError(e);
-    }
+    return await _dio.post(endpoint, data: data);
   }
 
-  Future<Response> post<T>({
+  Future<Response> put({
     required String endpoint,
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Map<String, dynamic>? headers,
-    Options? options,
+    required Map<String, dynamic> data,
   }) async {
-    try {
-      final response = await _dio.post(
-        endpoint,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-      return response;
-    } on DioException catch (e) {
-      throw _handleDioError(e);
-    }
+    return await _dio.put(endpoint, data: data);
   }
 
-  Future<Response> put<T>({
-    required String endpoint,
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-  }) async {
-    try {
-      final response = await _dio.put(
-        endpoint,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-      return response;
-    } on DioException catch (e) {
-      throw _handleDioError(e);
-    }
-  }
-
-  Future<Response> delete<T>({
-    required String endpoint,
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-  }) async {
-    try {
-      final response = await _dio.delete(
-        endpoint,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-      return response;
-    } on DioException catch (e) {
-      throw _handleDioError(e);
-    }
-  }
-
-  Exception _handleDioError(DioException e) {
-    switch (e.type) {
-      case DioExceptionType.connectionTimeout:
-        return Exception('Connection timeout');
-      case DioExceptionType.receiveTimeout:
-        return Exception('Receive timeout');
-      case DioExceptionType.badResponse:
-        return Exception(
-          'Error ${e.response?.statusCode}: ${e.response?.statusMessage}',
-        );
-      case DioExceptionType.cancel:
-        return Exception('Request cancelled');
-      case DioExceptionType.connectionError:
-        return Exception('No internet connection');
-      default:
-        return Exception('Something went wrong: ${e.message}');
-    }
+  Future<Response> delete({required String endpoint}) async {
+    return await _dio.delete(endpoint);
   }
 }

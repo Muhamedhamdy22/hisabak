@@ -6,6 +6,7 @@ import 'package:hisabak/Features/Auth/presentation/bloc/auth_event.dart';
 import 'package:hisabak/Features/Auth/presentation/bloc/auth_state.dart';
 import 'package:hisabak/core/Api/error_handling.dart';
 import 'package:hisabak/core/enums/request_status.dart';
+import 'package:hisabak/core/helper/shared_pref_helper.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -16,12 +17,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this.loginUseCase, this.registerUseCase) : super(AuthState()) {
     on<LoginEvent>(_login);
     on<RegisterEvent>(_register);
+    on<LogoutEvent>(_logout);
   }
 
   Future<void> _login(LoginEvent event, Emitter<AuthState> emit) async {
     emit(state.copyWith(loginRequestStatus: RequestStatus.loading));
     try {
       var response = await loginUseCase.call(event.phone, event.password);
+
+      // حفظ الـ token
+      if (response.data?.token != null) {
+        await SharedPrefHelper.saveToken(response.data!.token!);
+      }
+
       emit(state.copyWith(
         loginRequestStatus: RequestStatus.success,
         loginResponse: response,
@@ -49,6 +57,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           password: event.password,
         ),
       );
+
+      // حفظ الـ token
+      if (response.data?.token != null) {
+        await SharedPrefHelper.saveToken(response.data!.token!);
+      }
+
       emit(state.copyWith(
         registerRequestStatus: RequestStatus.success,
         loginResponse: response,
@@ -64,5 +78,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         registerRequestMessage: e.toString(),
       ));
     }
+  }
+
+  Future<void> _logout(LogoutEvent event, Emitter<AuthState> emit) async {
+    await SharedPrefHelper.clearAll();
+    emit(AuthState());
   }
 }

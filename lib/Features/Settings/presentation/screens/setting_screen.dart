@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hisabak/core/constants/app_colors.dart';
 import 'package:hisabak/core/constants/app_text_styles.dart';
 import 'package:hisabak/core/constants/app_constants.dart';
+import 'package:hisabak/core/helper/shared_pref_helper.dart';
 import 'package:hisabak/core/routes_manager/route.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -48,7 +49,8 @@ class SettingsScreen extends StatelessWidget {
                 _buildSettingsRow(
                   icon: Icons.info_outline,
                   title: 'Version',
-                  trailing: const Text(AppConstants.appVersion, style: AppTextStyles.bodyMedium),
+                  trailing: const Text(AppConstants.appVersion,
+                      style: AppTextStyles.bodyMedium),
                   onTap: () {},
                 ),
                 _buildSettingsRow(
@@ -92,9 +94,11 @@ class SettingsScreen extends StatelessWidget {
           leading: Icon(icon, color: AppColors.primary, size: 22),
           title: Text(title, style: AppTextStyles.bodyLarge),
           trailing: trailing ??
-              const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 20),
+              const Icon(Icons.chevron_right,
+                  color: AppColors.textSecondary, size: 20),
         ),
-        const Divider(height: 0.5, thickness: 0.5, indent: 56, color: AppColors.border),
+        const Divider(
+            height: 0.5, thickness: 0.5, indent: 56, color: AppColors.border),
       ],
     );
   }
@@ -105,10 +109,9 @@ class SettingsScreen extends StatelessWidget {
       child: OutlinedButton.icon(
         onPressed: () => _confirmLogout(context),
         icon: const Icon(Icons.logout, color: AppColors.danger),
-        label: const Text(
-          'Logout',
-          style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w600),
-        ),
+        label: const Text('Logout',
+            style: TextStyle(
+                color: AppColors.danger, fontWeight: FontWeight.w600)),
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
           side: const BorderSide(color: AppColors.danger, width: 0.5),
@@ -125,22 +128,21 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
-        ),
+            borderRadius: BorderRadius.circular(AppConstants.radiusLg)),
         title: const Text('Logout'),
         content: const Text('Are you sure you want to logout?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel')),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
+              await SharedPrefHelper.clearAll();
               Navigator.pop(context);
-              // TODO: clear token from SharedPreferences
               Navigator.pushReplacementNamed(context, Routes.loginRoute);
             },
-            child: const Text('Logout', style: TextStyle(color: AppColors.danger)),
+            child: const Text('Logout',
+                style: TextStyle(color: AppColors.danger)),
           ),
         ],
       ),
@@ -160,9 +162,18 @@ class SettingsScreen extends StatelessWidget {
         if (i == 2) Navigator.pushReplacementNamed(context, Routes.settingsRoute);
       },
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.people_outline), activeIcon: Icon(Icons.people), label: 'Customers'),
-        BottomNavigationBarItem(icon: Icon(Icons.settings_outlined), activeIcon: Icon(Icons.settings), label: 'Settings'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.people_outline),
+            activeIcon: Icon(Icons.people),
+            label: 'Customers'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.settings_outlined),
+            activeIcon: Icon(Icons.settings),
+            label: 'Settings'),
       ],
     );
   }
@@ -174,12 +185,8 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: AppTextStyles.labelSmall.copyWith(
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.5,
-      ),
-    );
+    return Text(label,
+        style: AppTextStyles.labelSmall
+            .copyWith(fontWeight: FontWeight.w600, letterSpacing: 0.5));
   }
 }
