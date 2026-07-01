@@ -8,7 +8,7 @@ class SharedPrefHelper {
     _prefs = await SharedPreferences.getInstance();
   }
 
-
+  // Token
   static Future<void> saveToken(String token) async {
     await _prefs?.setString(AppConstants.keyToken, token);
   }
@@ -25,7 +25,16 @@ class SharedPrefHelper {
     return _prefs?.getString(AppConstants.keyToken) != null;
   }
 
+  // Language
+  static Future<void> saveLang(String lang) async {
+    await _prefs?.setString(AppConstants.keyLang, lang);
+  }
 
+  static String? getLang() {
+    return _prefs?.getString(AppConstants.keyLang);
+  }
+
+  // Clear All
   static Future<void> clearAll() async {
     await _prefs?.clear();
   }
