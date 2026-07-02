@@ -55,6 +55,14 @@ class _HisabakAppState extends State<HisabakApp> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       locale: _locale,
+      builder: (context, child) {
+        return Directionality(
+          textDirection: _locale.languageCode == 'ar'
+              ? TextDirection.rtl
+              : TextDirection.ltr,
+          child: child!,
+        );
+      },
       supportedLocales: const [
         Locale('en'),
         Locale('ar'),
