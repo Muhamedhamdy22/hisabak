@@ -7,8 +7,15 @@ import 'package:hisabak/core/routes_manager/route.dart';
 import 'package:hisabak/l10n/app_localizations.dart';
 import 'package:hisabak/main.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  String _currentLang = SharedPrefHelper.getLang() ?? 'en';
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +25,11 @@ class SettingsScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text(l.settings,
-            style: const TextStyle(
-                color: AppColors.surface, fontWeight: FontWeight.w600)),
+        title: Text(
+          l.settings,
+          style: const TextStyle(
+              color: AppColors.surface, fontWeight: FontWeight.w600),
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -36,16 +45,8 @@ class SettingsScreen extends StatelessWidget {
             const SizedBox(height: 8),
             _buildSettingsCard(
               children: [
-                _buildSettingsRow(
-                  icon: Icons.lock_outline,
-                  title: l.changePassword,
-                  onTap: () {},
-                ),
-                _buildSettingsRow(
-                  icon: Icons.phone_outlined,
-                  title: l.changePhone,
-                  onTap: () {},
-                ),
+                _buildSettingsRow(icon: Icons.lock_outline, title: l.changePassword, onTap: () {}),
+                _buildSettingsRow(icon: Icons.phone_outlined, title: l.changePhone, onTap: () {}),
               ],
             ),
             const SizedBox(height: 20),
@@ -56,15 +57,10 @@ class SettingsScreen extends StatelessWidget {
                 _buildSettingsRow(
                   icon: Icons.info_outline,
                   title: l.version,
-                  trailing: const Text(AppConstants.appVersion,
-                      style: AppTextStyles.bodyMedium),
+                  trailing: const Text(AppConstants.appVersion, style: AppTextStyles.bodyMedium),
                   onTap: () {},
                 ),
-                _buildSettingsRow(
-                  icon: Icons.star_outline,
-                  title: l.rateApp,
-                  onTap: () {},
-                ),
+                _buildSettingsRow(icon: Icons.star_outline, title: l.rateApp, onTap: () {}),
               ],
             ),
             const SizedBox(height: 20),
@@ -78,7 +74,6 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildLanguageCard(BuildContext context, AppLocalizations l) {
-    final currentLang = SharedPrefHelper.getLang() ?? 'en';
     return Container(
       padding: const EdgeInsets.all(AppConstants.spaceMd),
       decoration: BoxDecoration(
@@ -105,7 +100,7 @@ class SettingsScreen extends StatelessWidget {
                   code: 'en',
                   label: 'English',
                   flag: '🇬🇧',
-                  isSelected: currentLang == 'en',
+                  isSelected: _currentLang == 'en',
                 ),
               ),
               const SizedBox(width: 10),
@@ -115,7 +110,7 @@ class SettingsScreen extends StatelessWidget {
                   code: 'ar',
                   label: 'العربية',
                   flag: '🇪🇬',
-                  isSelected: currentLang == 'ar',
+                  isSelected: _currentLang == 'ar',
                 ),
               ),
             ],
@@ -135,6 +130,7 @@ class SettingsScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         await SharedPrefHelper.saveLang(code);
+        setState(() => _currentLang = code);
         HisabakApp.setLocale(context, Locale(code));
       },
       child: AnimatedContainer(
@@ -157,8 +153,7 @@ class SettingsScreen extends StatelessWidget {
               label,
               style: TextStyle(
                 color: isSelected ? AppColors.surface : AppColors.textPrimary,
-                fontWeight:
-                isSelected ? FontWeight.w600 : FontWeight.w400,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 fontSize: 13,
               ),
             ),
@@ -214,8 +209,7 @@ class SettingsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 14),
           side: const BorderSide(color: AppColors.danger, width: 0.5),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
-          ),
+              borderRadius: BorderRadius.circular(AppConstants.radiusMd)),
         ),
       ),
     );
@@ -257,10 +251,8 @@ class SettingsScreen extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       onTap: (i) {
         if (i == 0) Navigator.pushReplacementNamed(context, Routes.homeRoute);
-        if (i == 1)
-          Navigator.pushReplacementNamed(context, Routes.customersRoute);
-        if (i == 2)
-          Navigator.pushReplacementNamed(context, Routes.settingsRoute);
+        if (i == 1) Navigator.pushReplacementNamed(context, Routes.customersRoute);
+        if (i == 2) Navigator.pushReplacementNamed(context, Routes.settingsRoute);
       },
       items: [
         BottomNavigationBarItem(
